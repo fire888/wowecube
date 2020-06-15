@@ -1,18 +1,16 @@
 
-var THREE, manager, cubeTextureLoader, loaderGLB
-
+let THREE, manager, cubeTextureLoader, loaderGLB
 const resourses = {}
 
-const loadAssets = (T, GLTFLoader) => {
+const loadAssets = (T) => {
     THREE = T
     manager = new THREE.LoadingManager();
     cubeTextureLoader = new THREE.CubeTextureLoader(manager);
-    loaderGLB = new GLTFLoader(manager)
+    loaderGLB = new THREE.GLTFLoader(manager)
 
-    return new Promise(resolve => {
-        load() 
-        manager.onLoad = () => resolve(resourses)
-    })
+    load() 
+
+    return new Promise(resolve => manager.onLoad = () => resolve(resourses))
 } 
 
 
@@ -24,7 +22,7 @@ function load() {
         'assets/skybox/py.jpg', 
         'assets/skybox/ny.jpg', 
         'assets/skybox/pz.jpg', 
-        'assets/skybox/nz.jpg'
+        'assets/skybox/nz.jpg',
     ],
     function ( texture ) {
         resourses.skyboxTexture = texture;
@@ -49,7 +47,6 @@ function load() {
         }
     );
 } 
-
 
 
 module.exports = loadAssets;

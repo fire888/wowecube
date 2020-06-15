@@ -35,12 +35,12 @@ scene.add(groupCameras)
 
 const d = 150
 const keyViews = [
-    {key: 'up', pos: [0, d, 0], },
-    {key: 'down', pos: [0, -d, 0], },
-    {key: 'left', pos: [-d, 0, 0], },
-    {key: 'right', pos: [d, 0, 0], },
-    {key: 'front', pos: [0, 0, -d], },
-    {key: 'back', pos: [0, 0, d], },
+    { key: 'up', pos: [0, d, 0], },
+    { key: 'down', pos: [0, -d, 0], },
+    { key: 'left', pos: [-d, 0, 0], },
+    { key: 'right', pos: [d, 0, 0], },
+    { key: 'front', pos: [0, 0, -d], },
+    { key: 'back', pos: [0, 0, d], },
 ];
 
 const cameras = {}
@@ -70,9 +70,6 @@ const pointLight1 = new THREE.PointLight( 0xffffff, 1 );
 
 
 // UPDATE //////////////////////////////////////
-
-
-let t1 = Date.now()
 
 function animate() {
     requestAnimationFrame( animate );
@@ -107,7 +104,7 @@ function WriteToFile(key) {
 
 // INIT ITEMS ////////////////////////////////////////////
 
-loadAssets(THREE, THREE.GLTFLoader)
+loadAssets(THREE)
   .then(res => {
     scene.background = res.skyboxTexture;
     
@@ -130,6 +127,9 @@ loadAssets(THREE, THREE.GLTFLoader)
     animate()  /////////////////// START RENDER 
   })
 
+
+
+  
 </script>
 </body>
 </html>
