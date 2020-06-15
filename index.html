@@ -11,17 +11,11 @@
 <body>
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); width: 550px;">
   <canvas id="up"></canvas>
-  <span>up</span></br>
   <canvas id="down"></canvas>
-  <span>down</span></br>
   <canvas id="left"></canvas>
-  <span>left</span></br>
   <canvas id="right"></canvas>
-  <span>back</span></br>
   <canvas id="front"></canvas>
-  <span>left</span></br>
   <canvas id="back"></canvas>
-  <span>right</span></br>
 </div>
 <script type="text/javascript">
 
@@ -50,8 +44,8 @@ scene.add(groupCameras)
 const keyViews = [
     {key: 'up', pos: [0, d, 0], },
     {key: 'down', pos: [0, -d, 0], },
-    {key: 'left', pos: [0, -d, 0], },
-    {key: 'right', pos: [0, d, 0], },
+    {key: 'left', pos: [-d, 0, 0], },
+    {key: 'right', pos: [d, 0, 0], },
     {key: 'front', pos: [0, 0, -d], },
     {key: 'back', pos: [0, 0, d], },
 ];
@@ -102,10 +96,10 @@ let t1 = Date.now()
 function animate() {
     requestAnimationFrame( animate );
 
-    let t2 = Date.now()
+    //let t2 = Date.now()
 
-    if (t2 - t1 < 16 ) return;
-    t1 = t2
+    //if (t2 - t1 < 41 ) return;
+    //t1 = t2
 
     //box.rotation.y += 0.05
     //box.rotation.x += 0.01
