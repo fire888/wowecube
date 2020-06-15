@@ -1,25 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>WOWCUBE</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta name='viewport' content='width=device-width, user-scalable=no'>
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <style>
-  </style>
+<title>WOWCUBE</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name='viewport' content='width=device-width, user-scalable=no'>
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<style>
+</style>
 </head>
 <body>
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); width: 550px;">
-  <canvas id="up"></canvas>
-  <canvas id="down"></canvas>
-  <canvas id="left"></canvas>
-  <canvas id="right"></canvas>
-  <canvas id="front"></canvas>
-  <canvas id="back"></canvas>
+<canvas id="up"></canvas>
+<canvas id="down"></canvas>
+<canvas id="left"></canvas>
+<canvas id="right"></canvas>
+<canvas id="front"></canvas>
+<canvas id="back"></canvas>
 </div>
 <script type="text/javascript">
-
-
 
 
 const THREE = window.THREE = require( 'three' );
@@ -28,19 +26,14 @@ const loadAssets = require('./helpers/loadAssets')
 const fs = require('fs');
 
 
-// INIT ////////////////////////////////////////
 
-const d = 150
+// INIT SCENE ////////////////////////////////////////
 
-
-
-
-var scene = new THREE.Scene();
-
+const scene = new THREE.Scene();
 const groupCameras = new THREE.Group()
 scene.add(groupCameras)
 
-
+const d = 150
 const keyViews = [
     {key: 'up', pos: [0, d, 0], },
     {key: 'down', pos: [0, -d, 0], },
@@ -54,68 +47,43 @@ const cameras = {}
 const renderers = {}
 
 keyViews.forEach(function (item) {
-  const cam = new THREE.PerspectiveCamera( 30, 240 / 240, 0.01, 1000 )
-  cam.position.fromArray(item.pos)
-  cam.lookAt(new THREE.Vector3(0, 0, 0))
-  groupCameras.add(cam)
-  cameras[item.key] = cam
+    const cam = new THREE.PerspectiveCamera( 30, 240 / 240, 0.01, 1000 )
+        cam.position.fromArray(item.pos)
+        cam.lookAt(new THREE.Vector3(0, 0, 0))
+        groupCameras.add(cam)
+        cameras[item.key] = cam
 
-  const renderer = new THREE.WebGLRenderer({ antialias: false, canvas: document.getElementById(item.key), alpha: false });
-  renderer.autoClear = false
-  renderer.setSize(480, 480);
-  renderers[item.key] = renderer
+    const renderer = new THREE.WebGLRenderer({ antialias: false, canvas: document.getElementById(item.key), alpha: false });
+        renderer.autoClear = false
+        renderer.setSize(480, 480);
+        renderers[item.key] = renderer
 })
-  
-
-            
-var ambientLight = new THREE.AmbientLight( 0xffffff, 1 );
-scene.add( ambientLight );
-
+        
+const ambientLight = new THREE.AmbientLight( 0xffffff, 1 );
+    scene.add( ambientLight );
 const groupLight = new THREE.Group()
-scene.add(groupLight)
-var pointLight1 = new THREE.PointLight( 0xffffff, 1 );
-pointLight1.position.set(50, 50, 50);
-groupLight.add(pointLight1);
-
-//const box = new THREE.Mesh(
-//  new THREE.BoxGeometry(15, 15, 15),
-//  new THREE.MeshStandardMaterial({ color: 0xFF0000 })
-//)
-
-//scene.add(box)
-
-
+    scene.add(groupLight)
+const pointLight1 = new THREE.PointLight( 0xffffff, 1 );
+    pointLight1.position.set(50, 50, 50);
+    groupLight.add(pointLight1);
 
 
 
 // UPDATE //////////////////////////////////////
 
-let frame = 0
+
 let t1 = Date.now()
 
 function animate() {
     requestAnimationFrame( animate );
-
-    //let t2 = Date.now()
-
-    //if (t2 - t1 < 41 ) return;
-    //t1 = t2
-
-    //box.rotation.y += 0.05
-    //box.rotation.x += 0.01
-
+    
     groupLight.rotation.y += 0.1
-
-    groupCameras.rotation.y += 0.01
+    groupCameras.rotation.y += 0.03
 
     for (let key in cameras) {
-        
-        currentKey = key
         renderers[key].render( scene, cameras[key] );
-        WriteToFile(frame, key);
+        WriteToFile(key);
     }
-
-    frame ++;
 }
 
 
@@ -125,16 +93,8 @@ function animate() {
 //const PATH = './frames/'
 const PATH = 'C:/Users/User/Documents/WOWCube/sides/'
 
-function WriteToFile(frame, key) {
-  var num = ""
-  if (frame < 10) {
-    num += "00"
-  } else if (frame < 100) {
-    num += "0"
-  }
-  num += frame
-
-  var dataURL = renderers[currentKey].domElement.toDataURL('image/bmp'); 
+function WriteToFile(key) {
+  var dataURL = renderers[key].domElement.toDataURL('image/bmp'); 
   let bin = atob(dataURL.split(",")[1]);
   let buff = new Buffer(dataURL.split(",")[1], 'base64');
 
@@ -143,13 +103,14 @@ function WriteToFile(frame, key) {
 }
 
 
-animate()
 
 
-///////////////////////////////////////////////
+// INIT ITEMS ////////////////////////////////////////////
+
 loadAssets(THREE, THREE.GLTFLoader)
   .then(res => {
     scene.background = res.skyboxTexture;
+    
     const matIron = new THREE.MeshPhongMaterial({
       color: 0xffffff,
       emissive: 0x0e1030,
@@ -160,12 +121,13 @@ loadAssets(THREE, THREE.GLTFLoader)
       envMap: res.skyboxTexture,
       reflectivity: 0.8,			
     });
-    console.log(res.mask)
     res.mask.children.forEach(item => item.material = matIron)
     res.mask.material = matIron
     res.mask.scale.set(0.5, 0.5, 0.5)
     res.mask.position.y -= 50
     scene.add(res.mask)
+
+    animate()  /////////////////// START RENDER 
   })
 
 </script>

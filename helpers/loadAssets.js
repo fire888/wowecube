@@ -1,8 +1,5 @@
 
-var THREE = null
-var manager = null// new THREE.LoadingManager();
-var cubeTextureLoader =  null // new THREE.CubeTextureLoader(manager);
-var loader = null
+var THREE, manager, cubeTextureLoader, loaderGLB
 
 const resourses = {}
 
@@ -10,11 +7,10 @@ const loadAssets = (T, GLTFLoader) => {
     THREE = T
     manager = new THREE.LoadingManager();
     cubeTextureLoader = new THREE.CubeTextureLoader(manager);
-    loader = new GLTFLoader(manager)
+    loaderGLB = new GLTFLoader(manager)
 
     return new Promise(resolve => {
         load() 
-        //resolve(resourses)
         manager.onLoad = () => resolve(resourses)
     })
 } 
@@ -39,9 +35,8 @@ function load() {
     });
 
 
-    loader.load('assets/avatar.glb',
+    loaderGLB.load('assets/avatar.glb',
         function ( gltf ) {
-            console.log('!!!!!!!!!!',gltf)
             resourses.mask = gltf.scene.children[0];
             
         },
