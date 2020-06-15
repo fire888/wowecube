@@ -76,10 +76,12 @@ keyViews.forEach(function (item) {
             
 var ambientLight = new THREE.AmbientLight( 0xffffff, 1 );
 scene.add( ambientLight );
-      
+
+const groupLight = new THREE.Group()
+scene.add(groupLight)
 var pointLight1 = new THREE.PointLight( 0xffffff, 1 );
 pointLight1.position.set(50, 50, 50);
-scene.add(pointLight1);
+groupLight.add(pointLight1);
 
 //const box = new THREE.Mesh(
 //  new THREE.BoxGeometry(15, 15, 15),
@@ -107,6 +109,8 @@ function animate() {
 
     //box.rotation.y += 0.05
     //box.rotation.x += 0.01
+
+    groupLight.rotation.y += 0.1
 
     groupCameras.rotation.y += 0.01
 
@@ -154,19 +158,19 @@ loadAssets(THREE, THREE.GLTFLoader)
     scene.background = res.skyboxTexture;
     const matIron = new THREE.MeshPhongMaterial({
       color: 0xffffff,
-      emissive: 0x7795d3,
+      emissive: 0x0e1030,
       specular: 0xffffff,
       shininess: 60,
       bumpMap: res.skyboxTexture,
       bumpScale: 0.4,						
       envMap: res.skyboxTexture,
-      reflectivity: 0.8,
-      transparent: false,
-      side: THREE.DoubleSide,	
+      reflectivity: 0.8,			
     });
+    console.log(res.mask)
+    res.mask.children.forEach(item => item.material = matIron)
     res.mask.material = matIron
     res.mask.scale.set(0.5, 0.5, 0.5)
-    res.mask.position.y -= 16
+    res.mask.position.y -= 50
     scene.add(res.mask)
   })
 

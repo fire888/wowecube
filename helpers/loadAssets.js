@@ -39,7 +39,7 @@ function load() {
     });
 
 
-    loader.load('assets/mask.glb',
+    loader.load('assets/avatar.glb',
         function ( gltf ) {
             console.log('!!!!!!!!!!',gltf)
             resourses.mask = gltf.scene.children[0];
