@@ -75,7 +75,7 @@ function animate() {
     requestAnimationFrame( animate );
     
     groupLight.rotation.y += 0.1
-    groupCameras.rotation.y += 0.03
+    groupCameras.rotation.y -= 0.03
 
     for (let key in cameras) {
         renderers[key].render( scene, cameras[key] );
@@ -92,10 +92,10 @@ const PATH = 'C:/Users/User/Documents/WOWCube/sides/'
 
 function WriteToFile(key) {
   var dataURL = renderers[key].domElement.toDataURL('image/bmp'); 
-  let buff = new Buffer(dataURL, 'base64');
+  let buff = new Buffer(dataURL.split(",")[1], 'base64');
 
-  try { fs.writeFileSync(`${ PATH }${ key }.bmp`, buff) }
-  catch(e) { alert('Failed to save the file !') }
+  try { fs.writeFileSync(`${ PATH }${ key }.bmp`, buff); }
+  catch(e) { alert('Failed to save the file !'); }
 }
 
 
@@ -119,8 +119,9 @@ loadAssets(THREE)
     });
     res.mask.children.forEach(item => item.material = matIron)
     res.mask.material = matIron
-    res.mask.scale.set(0.5, 0.5, 0.5)
-    res.mask.position.y -= 50
+    res.mask.scale.set(0.6, 0.6, 0.6)
+    res.mask.position.y -= 55
+    res.mask.position.x -= 30
     scene.add(res.mask)
 
     animate()  /////////////////// START RENDER 
