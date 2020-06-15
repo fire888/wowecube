@@ -1,0 +1,15 @@
+{
+  "name": "front_3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^9.0.4",
+    "three": "^0.117.1"
+  },
+  "scripts": {
+    "start": "electron ."
+  }
+}

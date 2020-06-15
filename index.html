@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WOWCUBE</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name='viewport' content='width=device-width, user-scalable=no'>
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <style>
+  </style>
+</head>
+<body>
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); width: 550px;">
+  <canvas id="up"></canvas>
+  <span>up</span></br>
+  <canvas id="down"></canvas>
+  <span>down</span></br>
+  <canvas id="left"></canvas>
+  <span>left</span></br>
+  <canvas id="right"></canvas>
+  <span>back</span></br>
+  <canvas id="front"></canvas>
+  <span>left</span></br>
+  <canvas id="back"></canvas>
+  <span>right</span></br>
+</div>
+<script type="text/javascript">
+
+
+
+
+const THREE = window.THREE = require( 'three' );
+require( 'three/examples/js/loaders/GLTFLoader.js' );
+const loadAssets = require('./helpers/loadAssets')
+const fs = require('fs');
+
+
+// INIT ////////////////////////////////////////
+
+const d = 150
+
+
+
+
+var scene = new THREE.Scene();
+
+const groupCameras = new THREE.Group()
+scene.add(groupCameras)
+
+
+const keyViews = [
+    {key: 'up', pos: [0, d, 0], },
+    {key: 'down', pos: [0, -d, 0], },
+    {key: 'left', pos: [0, -d, 0], },
+    {key: 'right', pos: [0, d, 0], },
+    {key: 'front', pos: [0, 0, -d], },
+    {key: 'back', pos: [0, 0, d], },
+];
+
+const cameras = {}
+const renderers = {}
+
+keyViews.forEach(function (item) {
+  const cam = new THREE.PerspectiveCamera( 30, 240 / 240, 0.01, 1000 )
+  cam.position.fromArray(item.pos)
+  cam.lookAt(new THREE.Vector3(0, 0, 0))
+  groupCameras.add(cam)
+  cameras[item.key] = cam
+
+  const renderer = new THREE.WebGLRenderer({ antialias: false, canvas: document.getElementById(item.key), alpha: false });
+  renderer.autoClear = false
+  renderer.setSize(480, 480);
+  renderers[item.key] = renderer
+})
+  
+
+            
+var ambientLight = new THREE.AmbientLight( 0xffffff, 1 );
+scene.add( ambientLight );
+      
+var pointLight1 = new THREE.PointLight( 0xffffff, 1 );
+pointLight1.position.set(50, 50, 50);
+scene.add(pointLight1);
+
+//const box = new THREE.Mesh(
+//  new THREE.BoxGeometry(15, 15, 15),
+//  new THREE.MeshStandardMaterial({ color: 0xFF0000 })
+//)
+
+//scene.add(box)
+
+
+
+
+
+// UPDATE //////////////////////////////////////
+
+let frame = 0
+let t1 = Date.now()
+
+function animate() {
+    requestAnimationFrame( animate );
+
+    let t2 = Date.now()
+
+    if (t2 - t1 < 16 ) return;
+    t1 = t2
+
+    //box.rotation.y += 0.05
+    //box.rotation.x += 0.01
+
+    groupCameras.rotation.y += 0.01
+
+    for (let key in cameras) {
+        
+        currentKey = key
+        renderers[key].render( scene, cameras[key] );
+        WriteToFile(frame, key);
+    }
+
+    frame ++;
+}
+
+
+
+// WRITE ////////////////////////////////////////
+
+//const PATH = './frames/'
+const PATH = 'C:/Users/User/Documents/WOWCube/sides/'
+
+function WriteToFile(frame, key) {
+  var num = ""
+  if (frame < 10) {
+    num += "00"
+  } else if (frame < 100) {
+    num += "0"
+  }
+  num += frame
+
+  var dataURL = renderers[currentKey].domElement.toDataURL('image/bmp'); 
+  let bin = atob(dataURL.split(",")[1]);
+  let buff = new Buffer(dataURL.split(",")[1], 'base64');
+
+  try { fs.writeFileSync(`${ PATH }${ key }.bmp`, buff); }
+  catch(e) { alert('Failed to save the file !'); }
+}
+
+
+animate()
+
+
+///////////////////////////////////////////////
+loadAssets(THREE, THREE.GLTFLoader)
+  .then(res => {
+    scene.background = res.skyboxTexture;
+    const matIron = new THREE.MeshPhongMaterial({
+      color: 0xffffff,
+      emissive: 0x7795d3,
+      specular: 0xffffff,
+      shininess: 60,
+      bumpMap: res.skyboxTexture,
+      bumpScale: 0.4,						
+      envMap: res.skyboxTexture,
+      reflectivity: 0.8,
+      transparent: false,
+      side: THREE.DoubleSide,	
+    });
+    res.mask.material = matIron
+    res.mask.scale.set(0.5, 0.5, 0.5)
+    res.mask.position.y -= 16
+    scene.add(res.mask)
+  })
+
+</script>
+</body>
+</html>
