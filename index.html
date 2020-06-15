@@ -92,11 +92,10 @@ const PATH = 'C:/Users/User/Documents/WOWCube/sides/'
 
 function WriteToFile(key) {
   var dataURL = renderers[key].domElement.toDataURL('image/bmp'); 
-  let bin = atob(dataURL.split(",")[1]);
-  let buff = new Buffer(dataURL.split(",")[1], 'base64');
+  let buff = new Buffer(dataURL, 'base64');
 
-  try { fs.writeFileSync(`${ PATH }${ key }.bmp`, buff); }
-  catch(e) { alert('Failed to save the file !'); }
+  try { fs.writeFileSync(`${ PATH }${ key }.bmp`, buff) }
+  catch(e) { alert('Failed to save the file !') }
 }
 
 
@@ -129,7 +128,7 @@ loadAssets(THREE)
 
 
 
-  
+
 </script>
 </body>
 </html>
