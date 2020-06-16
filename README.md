@@ -9,7 +9,7 @@ About
 ------------   
   
   
-![pic](https://github.com/fire888/wowecube/blob/master/src/assets/start-img.png)
+![pic](https://github.com/fire888/wowecube/blob/master/src/assets/preview.jpg)
 
 ```javascript
 git init
