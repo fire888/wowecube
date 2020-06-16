@@ -15,6 +15,5 @@ About
 git init
 git remote add origin https://github.com/fire888/wowecube.git
 git pull origin master
-npm run build
 npm run start
 ```
